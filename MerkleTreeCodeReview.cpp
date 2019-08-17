@@ -11,7 +11,7 @@
 // std::string hash256_hex_string(const InContainer& src);
 // where InContainer must provide begin() and end() with ForwardIter compatible
 // semantics.
-#include "../picosha2.h"
+#include "./picosha2.h"
 
 // Class for each Node in Merkle Tree
 class MerkleNode {
@@ -47,7 +47,7 @@ public:
 class StreamingMerkleTree {
 protected:
   std::shared_ptr<MerkleNode> root_;
-  std::map<int, std::shared_ptr<MerkleNode>> frontier_;
+  std::map<int, std::shared_ptr<MerkleNode> > frontier_;
 
   std::shared_ptr<MerkleNode> getSibling(std::shared_ptr<MerkleNode> node) {
     std::shared_ptr<MerkleNode> parent = node->parent();
@@ -62,15 +62,15 @@ protected:
   }
 
   virtual void updateRoot() {
-    std::vector<std::shared_ptr<MerkleNode>> level;
-    for (std::map<int, std::shared_ptr<MerkleNode>>::iterator it =
+    std::vector<std::shared_ptr<MerkleNode> > level;
+    for (std::map<int, std::shared_ptr<MerkleNode> >::iterator it =
              frontier_.begin();
          it != frontier_.end(); ++it) {
       level.push_back(it->second);
     }
 
     while (level.size() > 1) {
-      std::vector<std::shared_ptr<MerkleNode>> temp;
+      std::vector<std::shared_ptr<MerkleNode> > temp;
       for (int i = 0; i < level.size() - 1; i += 2) {
         MerkleNode *left = level[i].get();
         MerkleNode *right = level[i + 1].get();
@@ -128,7 +128,7 @@ public:
     return proof;
   }
 
-  std::map<int, std::shared_ptr<MerkleNode>> frontier() const {
+  std::map<int, std::shared_ptr<MerkleNode> > frontier() const {
     return frontier_;
   }
 };
